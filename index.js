@@ -128,10 +128,6 @@ client.on("raw", async (packet) => {
           "🇿",
         ];
 
-        message.reactions.cache.forEach((rxn) => {
-          console.log(rxn._emoji.name);
-        });
-
         if (!letters.slice(0, optionsCount).includes(packet.d.emoji.name)) {
           const rxn = message.reactions.resolve(packet.d.emoji.name);
           if (rxn) rxn.remove();
@@ -144,10 +140,6 @@ client.on("raw", async (packet) => {
         }
       } else {
         const reactions = message.reactions.cache;
-
-        reactions.forEach((rxn) => {
-          console.log(rxn._emoji.name);
-        });
 
         if (packet.d.emoji.name === "👍" || packet.d.emoji.name === "👎")
           reactions.forEach((rxn) => {

@@ -130,7 +130,7 @@ exports.sendGMEMessage = async (channel) => {
 
 exports.wrongCommand = async (message) => {
   try {
-    message.author.send(message.wrongCommand);
+    message.author.send(messages.wrongCommand);
     // message.member.send('Success!');
   } catch (err) {
     console.log(err);
@@ -181,7 +181,7 @@ exports.sendRoles = async (channel) => {
 };
 
 const isValidSyntax = (cmnd) => {
-  const template = /^{([^}]*)\}(\[([^\]]*)\])*$/;
+  const template = /^{([^}]*)\}((\s)*\[([^\]]*)\])*$/;
   const valid = template.test(cmnd);
   // console.log(valid);
   // if (valid) console.log(cmnd.match(template));
@@ -214,13 +214,13 @@ exports.handlePoll = async (command, msg) => {
   }
 
   if (!isValidSyntax(truncMessage)) {
-    msg.reply("Invalid syntax for command `poll`\nUse `!poll help` for syntax");
+    msg.author.send(messages.wrongPollCommand);
 
     return;
   }
 
   const matchPollMsg = /\{([^}]*)\}/g;
-  const matchPollOptions = /\[([^\]]*)\]/g;
+  const matchPollOptions = /(\s)*\[([^\]]*)\]/g;
 
   const pollMessage = truncMessage.match(matchPollMsg)[0];
   const optionsMessage = truncMessage.replace(pollMessage, "");
@@ -261,7 +261,7 @@ exports.handlePoll = async (command, msg) => {
 
   if (pollOptions)
     pollOptions.forEach((el) => {
-      const option = el.slice(1, -1).trim();
+      const option = el.trim().slice(1, -1).trim();
       if (option !== "") {
         pollDescriptionOptions += `\n${letters[numOptions]}\t${option}`;
         ++numOptions;
@@ -273,9 +273,9 @@ exports.handlePoll = async (command, msg) => {
     .setTitle("Poll")
     .setDescription(pollDescription);
 
-  if (pollOptions)
+  if (pollDescriptionOptions !== "")
     poll.addFields({
-      name: `${numOptions > 0 ? numOptions : 2} Options`,
+      name: `${numOptions} Option${numOptions == 1 ? "" : "s"}`,
       value: pollDescriptionOptions,
     });
 
